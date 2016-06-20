@@ -4,15 +4,17 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 /*
  * (C) Copyright 2013-2015 Kurento (http://kurento.org/)
  *
- * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the GNU Lesser General Public License (LGPL)
- * version 2.1 which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/lgpl-2.1.html
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 var inherits = require('inherits');
@@ -46,6 +48,8 @@ function noop(error, result) {
  * @extends module:core/abstracts.Filter
  *
  * @constructor module:nubofacedetector.NuboFaceDetector
+ *
+ * @fires {@link module:nubofacedetector#event:OnFace OnFace}
  */
 function NuboFaceDetector(){
   NuboFaceDetector.super_.call(this);
@@ -56,6 +60,75 @@ inherits(NuboFaceDetector, Filter);
 //
 // Public methods
 //
+
+/**
+ * The events will be launched to the server with the information about the face
+ *
+ * @alias module:nubofacedetector.NuboFaceDetector.activateServerEvents
+ *
+ * @param {external:Integer} activate
+ *  1=>activate it, 0 desactivated
+ *
+ * @param {external:Integer} time
+ *  the frequency in ms to send the events
+ *
+ * @param {module:nubofacedetector.NuboFaceDetector~activateServerEventsCallback} [callback]
+ *
+ * @return {external:Promise}
+ */
+NuboFaceDetector.prototype.activateServerEvents = function(activate, time, callback){
+  var transaction = (arguments[0] instanceof Transaction)
+                  ? Array.prototype.shift.apply(arguments)
+                  : undefined;
+
+  checkType('int', 'activate', activate, {required: true});
+  checkType('int', 'time', time, {required: true});
+
+  var params = {
+    activate: activate,
+    time: time
+  };
+
+  callback = (callback || noop).bind(this)
+
+  return disguise(this._invoke(transaction, 'activateServerEvents', params, callback), this)
+};
+/**
+ * @callback module:nubofacedetector.NuboFaceDetector~activateServerEventsCallback
+ * @param {external:Error} error
+ */
+
+/**
+ * To be completed
+ *
+ * @alias module:nubofacedetector.NuboFaceDetector.areaThreshold
+ *
+ * @param {external:Integer} threshold
+ *   0,1000 (500 default)
+ *
+ * @param {module:nubofacedetector.NuboFaceDetector~areaThresholdCallback} [callback]
+ *
+ * @return {external:Promise}
+ */
+NuboFaceDetector.prototype.areaThreshold = function(threshold, callback){
+  var transaction = (arguments[0] instanceof Transaction)
+                  ? Array.prototype.shift.apply(arguments)
+                  : undefined;
+
+  checkType('int', 'threshold', threshold, {required: true});
+
+  var params = {
+    threshold: threshold
+  };
+
+  callback = (callback || noop).bind(this)
+
+  return disguise(this._invoke(transaction, 'areaThreshold', params, callback), this)
+};
+/**
+ * @callback module:nubofacedetector.NuboFaceDetector~areaThresholdCallback
+ * @param {external:Error} error
+ */
 
 /**
  * To indicate to the algorithm if process all the images or only when it 
@@ -87,6 +160,41 @@ NuboFaceDetector.prototype.detectByEvent = function(event, callback){
 };
 /**
  * @callback module:nubofacedetector.NuboFaceDetector~detectByEventCallback
+ * @param {external:Error} error
+ */
+
+/**
+ * Distance among faces of consecutives faces to delete vibrations produced by 
+ * little changes of pixels of the same faces. To produce a change in the 
+ * position and size of the face, the distance between the same face of 
+ * consecutives frames will have to be higher than this value
+ *
+ * @alias module:nubofacedetector.NuboFaceDetector.euclideanDistance
+ *
+ * @param {external:Integer} distance
+ *   0,20 (8 default)
+ *
+ * @param {module:nubofacedetector.NuboFaceDetector~euclideanDistanceCallback} [callback]
+ *
+ * @return {external:Promise}
+ */
+NuboFaceDetector.prototype.euclideanDistance = function(distance, callback){
+  var transaction = (arguments[0] instanceof Transaction)
+                  ? Array.prototype.shift.apply(arguments)
+                  : undefined;
+
+  checkType('int', 'distance', distance, {required: true});
+
+  var params = {
+    distance: distance
+  };
+
+  callback = (callback || noop).bind(this)
+
+  return disguise(this._invoke(transaction, 'euclideanDistance', params, callback), this)
+};
+/**
+ * @callback module:nubofacedetector.NuboFaceDetector~euclideanDistanceCallback
  * @param {external:Error} error
  */
 
@@ -219,6 +327,38 @@ NuboFaceDetector.prototype.showFaces = function(viewFaces, callback){
  */
 
 /**
+ * To be completed
+ *
+ * @alias module:nubofacedetector.NuboFaceDetector.trackThreshold
+ *
+ * @param {external:Integer} threshold
+ *   0,100 (30 default)
+ *
+ * @param {module:nubofacedetector.NuboFaceDetector~trackThresholdCallback} [callback]
+ *
+ * @return {external:Promise}
+ */
+NuboFaceDetector.prototype.trackThreshold = function(threshold, callback){
+  var transaction = (arguments[0] instanceof Transaction)
+                  ? Array.prototype.shift.apply(arguments)
+                  : undefined;
+
+  checkType('int', 'threshold', threshold, {required: true});
+
+  var params = {
+    threshold: threshold
+  };
+
+  callback = (callback || noop).bind(this)
+
+  return disguise(this._invoke(transaction, 'trackThreshold', params, callback), this)
+};
+/**
+ * @callback module:nubofacedetector.NuboFaceDetector~trackThresholdCallback
+ * @param {external:Error} error
+ */
+
+/**
  * this will be the width of the image that the algorithm is going to process to
  *
  * @alias module:nubofacedetector.NuboFaceDetector.widthToProcess
@@ -259,7 +399,7 @@ NuboFaceDetector.prototype.widthToProcess = function(width, callback){
  */
 NuboFaceDetector.constructorParams = {
   mediaPipeline: {
-    type: 'MediaPipeline',
+    type: 'kurento.MediaPipeline',
     required: true
   }
 };
@@ -269,7 +409,7 @@ NuboFaceDetector.constructorParams = {
  *
  * @extends module:core/abstracts.Filter.events
  */
-NuboFaceDetector.events = Filter.events;
+NuboFaceDetector.events = Filter.events.concat(['OnFace']);
 
 
 /**
@@ -298,21 +438,180 @@ NuboFaceDetector.check = checkNuboFaceDetector;
 
 require('.');
 
-},{".":"kurento-module-nubofacedetector"}],"kurento-module-nubofacedetector":[function(require,module,exports){
+},{".":"kurento-module-nubofacedetector"}],3:[function(require,module,exports){
 /* Autogenerated with Kurento Idl */
 
 /*
  * (C) Copyright 2013-2015 Kurento (http://kurento.org/)
  *
- * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the GNU Lesser General Public License (LGPL)
- * version 2.1 which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/lgpl-2.1.html
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+var inherits = require('inherits');
+
+var kurentoClient = require('kurento-client');
+
+var checkType = kurentoClient.checkType;
+var ChecktypeError = checkType.ChecktypeError;
+
+var ComplexType = kurentoClient.register.complexTypes.ComplexType;
+
+
+/**
+ * FaceInfo contains information about the detected face
+ *
+ * @constructor module:nubofacedetector/complexTypes.FaceInfo
+ *
+ * @property {external:String} name
+ *  This value contains the word face in order to identify the register
+ * @property {external:Integer} x
+ *  represent the x value of the upper left corner of the face 
+ * @property {external:Integer} y
+ *  represent the y value of the upper left corner of the face 
+ * @property {external:Integer} height
+ *  Represent the height of the detected face
+ * @property {external:Integer} width
+ *  Represent the width of the detected face
+ */
+function FaceInfo(faceInfoDict){
+  if(!(this instanceof FaceInfo))
+    return new FaceInfo(faceInfoDict)
+
+  faceInfoDict = faceInfoDict || {}
+
+  // Check faceInfoDict has the required fields
+  checkType('String', 'faceInfoDict.name', faceInfoDict.name, {required: true});
+  checkType('int', 'faceInfoDict.x', faceInfoDict.x, {required: true});
+  checkType('int', 'faceInfoDict.y', faceInfoDict.y, {required: true});
+  checkType('int', 'faceInfoDict.height', faceInfoDict.height, {required: true});
+  checkType('int', 'faceInfoDict.width', faceInfoDict.width, {required: true});
+
+  // Init parent class
+  FaceInfo.super_.call(this, faceInfoDict)
+
+  // Set object properties
+  Object.defineProperties(this, {
+    name: {
+      writable: true,
+      enumerable: true,
+      value: faceInfoDict.name
+    },
+    x: {
+      writable: true,
+      enumerable: true,
+      value: faceInfoDict.x
+    },
+    y: {
+      writable: true,
+      enumerable: true,
+      value: faceInfoDict.y
+    },
+    height: {
+      writable: true,
+      enumerable: true,
+      value: faceInfoDict.height
+    },
+    width: {
+      writable: true,
+      enumerable: true,
+      value: faceInfoDict.width
+    }
+  })
+}
+inherits(FaceInfo, ComplexType)
+
+// Private identifiers to allow re-construction of the complexType on the server
+// They need to be enumerable so JSON.stringify() can access to them
+Object.defineProperties(FaceInfo.prototype, {
+  __module__: {
+    enumerable: true,
+    value: "nubofacedetector"
+  },
+  __type__: {
+    enumerable: true,
+    value: "FaceInfo"
+  }
+})
+
+/**
+ * Checker for {@link module:nubofacedetector/complexTypes.FaceInfo}
+ *
+ * @memberof module:nubofacedetector/complexTypes
+ *
+ * @param {external:String} key
+ * @param {module:nubofacedetector/complexTypes.FaceInfo} value
+ */
+function checkFaceInfo(key, value)
+{
+  if(!(value instanceof FaceInfo))
+    throw ChecktypeError(key, FaceInfo, value);
+};
+
+
+module.exports = FaceInfo;
+
+FaceInfo.check = checkFaceInfo;
+
+},{"inherits":"inherits","kurento-client":"kurento-client"}],4:[function(require,module,exports){
+/* Autogenerated with Kurento Idl */
+
+/*
+ * (C) Copyright 2013-2015 Kurento (http://kurento.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Media API for the Kurento Web SDK
+ *
+ * @module nubofacedetector/complexTypes
+ *
+ * @copyright 2013-2015 Kurento (http://kurento.org/)
+ * @license ALv2
+ */
+
+var FaceInfo = require('./FaceInfo');
+
+
+exports.FaceInfo = FaceInfo;
+
+},{"./FaceInfo":3}],"kurento-module-nubofacedetector":[function(require,module,exports){
+/* Autogenerated with Kurento Idl */
+
+/*
+ * (C) Copyright 2013-2015 Kurento (http://kurento.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
@@ -321,11 +620,11 @@ require('.');
  * @module nubofacedetector
  *
  * @copyright 2013-2015 Kurento (http://kurento.org/)
- * @license LGPL
+ * @license ALv2
  */
 
 Object.defineProperty(exports, 'name',    {value: 'nubofacedetector'});
-Object.defineProperty(exports, 'version', {value: '0.0.4-dev'});
+Object.defineProperty(exports, 'version', {value: '6.5.0'});
 
 
 var NuboFaceDetector = require('./NuboFaceDetector');
@@ -333,4 +632,6 @@ var NuboFaceDetector = require('./NuboFaceDetector');
 
 exports.NuboFaceDetector = NuboFaceDetector;
 
-},{"./NuboFaceDetector":1}]},{},[2]);
+exports.complexTypes = require('./complexTypes');
+
+},{"./NuboFaceDetector":1,"./complexTypes":4}]},{},[2]);
